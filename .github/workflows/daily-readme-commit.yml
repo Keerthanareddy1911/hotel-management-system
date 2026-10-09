@@ -1,0 +1,46 @@
+name: Daily README Autocommit
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  autocommit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update README with timestamp
+        run: |
+          TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S UTC')
+
+          if [ ! -f README.md ]; then
+            echo "# Hotel Management System" > README.md
+            echo "" >> README.md
+            echo "Last updated: $TIMESTAMP" >> README.md
+          else
+            if grep -q "Last updated:" README.md; then
+              sed -i "s/Last updated:.*/Last updated: $TIMESTAMP/" README.md
+            else
+              echo "" >> README.md
+              echo "Last updated: $TIMESTAMP" >> README.md
+            fi
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add README.md
+            git commit -m "chore: daily README update $(date '+%Y-%m-%d')"
+            git push
+          else
+            echo "No changes to commit"
+          fi
