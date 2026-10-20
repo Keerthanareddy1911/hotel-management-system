@@ -137,4 +137,4 @@ This is a single-hotel academic front-desk portal. It binds to loopback only. It
 - `Build.java` — dependency-free JDK build for demo.
 - `pom.xml` — Maven compilation and MySQL driver dependency.
 
-Last updated: 2026-10-19 02:12:17 UTC
+Last updated: 2026-10-20 02:27:21 UTC
